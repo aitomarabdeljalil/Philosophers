@@ -1,0 +1,5 @@
+.vscode
+*.o
+*.out
+.gitignore
+.DS_Store
