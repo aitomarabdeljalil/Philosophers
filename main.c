@@ -6,7 +6,7 @@
 /*   By: aait-oma <aait-oma@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2022/03/25 13:42:33 by aait-oma          #+#    #+#             */
-/*   Updated: 2022/03/26 19:03:53 by aait-oma         ###   ########.fr       */
+/*   Updated: 2022/03/27 16:17:00 by aait-oma         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -22,8 +22,8 @@
 //av[5] = number_of_times_each_philosopher_must_eat
 int main(int ac, char **av)
 {
-	if ((ac < 4 || ac > 5) && printf("error\n"))
+	if ((ac < 5 || ac > 6) && printf("error\n"))
 		return (0);
-
+	
 	return (0);
 }
