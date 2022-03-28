@@ -6,11 +6,11 @@
 /*   By: aait-oma <aait-oma@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2021/11/07 12:42:11 by aait-oma          #+#    #+#             */
-/*   Updated: 2021/11/09 09:17:49 by aait-oma         ###   ########.fr       */
+/*   Updated: 2022/03/28 12:03:22 by aait-oma         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
-#include "libft.h"
+#include "philo.h"
 
 static int	ft_isspace(int c)
 {
