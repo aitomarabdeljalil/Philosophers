@@ -6,7 +6,7 @@
 /*   By: aait-oma <aait-oma@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2022/03/25 20:11:52 by aait-oma          #+#    #+#             */
-/*   Updated: 2022/03/27 18:57:29 by aait-oma         ###   ########.fr       */
+/*   Updated: 2022/04/01 09:21:29 by aait-oma         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -23,6 +23,7 @@
 
 typedef struct s_philo
 {
+	pthread_t		p;
 	int 			lp;
 	int 			rp;
 	int				state;
