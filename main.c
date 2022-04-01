@@ -6,7 +6,7 @@
 /*   By: aait-oma <aait-oma@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2022/03/25 13:42:33 by aait-oma          #+#    #+#             */
-/*   Updated: 2022/03/30 17:22:52 by aait-oma         ###   ########.fr       */
+/*   Updated: 2022/04/01 18:57:31 by aait-oma         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -31,10 +31,39 @@ void	info_init(t_info *inf, int ac, char **av)
 		inf->nbr_pilo_eat = ft_atoi(av[5]);
 }
 
+void	philo_init(t_philo	**ph, t_info inf)
+{
+	int	i;
+
+	i = 0;
+	while (i < inf.nbr_philo)
+	{
+		(*ph)[i].id = i + 1;
+		if ((*ph)[i].id == 1)
+			(*ph)[i].lp = inf.nbr_philo;
+		else
+			(*ph)[i].lp = i;
+		if (i == inf.nbr_philo - 1)
+			(*ph)[i].rp = 1;
+		else
+			(*ph)[i].rp = i + 2;
+		(*ph)[i].right = &(*ph)[(*ph)[i].rp - 1].left;
+		(*ph)[i].info = inf;
+		pthread_mutex_init(&(*ph)[i].left, NULL);
+		i++;
+	}
+}
+
+void	*lifestyle()
+{
+	
+}
+
 int main(int ac, char **av)
 {
 	t_info	inf;
 	t_philo	*ph;
+	int		i;
 
 	if ((ac < 5 || ac > 6) && printf("error\n"))
 		return (0);
@@ -42,5 +71,10 @@ int main(int ac, char **av)
 	ph = malloc(inf.nbr_philo * sizeof(t_philo));
 	if (!ph)
 		return (0);
+	philo_init(&ph, inf);
+	while ()
+	{
+
+	}
 	return (0);
 }

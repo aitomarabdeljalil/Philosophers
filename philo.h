@@ -6,7 +6,7 @@
 /*   By: aait-oma <aait-oma@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2022/03/25 20:11:52 by aait-oma          #+#    #+#             */
-/*   Updated: 2022/04/01 09:21:29 by aait-oma         ###   ########.fr       */
+/*   Updated: 2022/04/01 12:08:19 by aait-oma         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -21,16 +21,6 @@
 # define SLEEPING 2
 # define EATING 3
 
-typedef struct s_philo
-{
-	pthread_t		p;
-	int 			lp;
-	int 			rp;
-	int				state;
-	pthread_mutex_t *left;
-	pthread_mutex_t *right;
-}	t_philo;
-
 typedef struct s_info
 {
 	int	nbr_philo;
@@ -39,6 +29,19 @@ typedef struct s_info
 	int time_sleep;
 	int	nbr_pilo_eat;
 }	t_info;
+
+typedef struct s_philo
+{
+	int				id;
+	pthread_t		pt;
+	int 			lp;
+	int 			rp;
+	int				state;
+	pthread_mutex_t left;
+	pthread_mutex_t *right;
+	t_info			info;
+}	t_philo;
+
 
 
 int	ft_atoi(const char *str);
