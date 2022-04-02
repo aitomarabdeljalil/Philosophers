@@ -6,7 +6,7 @@
 /*   By: aait-oma <aait-oma@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2022/03/25 13:42:33 by aait-oma          #+#    #+#             */
-/*   Updated: 2022/04/02 14:03:00 by aait-oma         ###   ########.fr       */
+/*   Updated: 2022/04/02 19:43:18 by aait-oma         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -68,6 +68,11 @@ void	ft_eating(t_philo *ph)
 	usleep(ph->info.time_eat);
 }
 
+void	ft_sleeping()
+{
+	
+}
+
 void	*plife(void *arg)
 {
 	t_philo	*ph;
@@ -79,7 +84,7 @@ void	*plife(void *arg)
 	{
 		ft_takefork(ph);
 		ft_eating(ph);
-		ft_sleeping()
+		ft_sleeping();
 	}
 
 }
