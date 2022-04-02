@@ -6,7 +6,7 @@
 /*   By: aait-oma <aait-oma@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2022/03/25 13:42:33 by aait-oma          #+#    #+#             */
-/*   Updated: 2022/04/01 18:57:31 by aait-oma         ###   ########.fr       */
+/*   Updated: 2022/04/02 14:03:00 by aait-oma         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -54,9 +54,34 @@ void	philo_init(t_philo	**ph, t_info inf)
 	}
 }
 
-void	*lifestyle()
+void	ft_takefork(t_philo *ph)
 {
-	
+	pthread_mutex_lock(ph->right);
+	printf("has taken a fork");
+	pthread_mutex_lock(&ph->left);
+	printf("has taken a fork");
+}
+
+void	ft_eating(t_philo *ph)
+{
+	printf("is eating");
+	usleep(ph->info.time_eat);
+}
+
+void	*plife(void *arg)
+{
+	t_philo	*ph;
+
+	ph = (t_philo *)arg;
+	if (ph->id % 2 == 0)
+		usleep(ph->info.time_die / 2);
+	while (1)
+	{
+		ft_takefork(ph);
+		ft_eating(ph);
+		ft_sleeping()
+	}
+
 }
 
 int main(int ac, char **av)
@@ -72,9 +97,12 @@ int main(int ac, char **av)
 	if (!ph)
 		return (0);
 	philo_init(&ph, inf);
-	while ()
+	i = 0;
+	while (i < inf.nbr_philo)
 	{
-
+		pthread_create(&(ph[i].pt), NULL, &plife, NULL);
+		pthread_join(ph[i].pt, NULL);
+		i++;
 	}
 	return (0);
 }
