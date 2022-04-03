@@ -6,7 +6,7 @@
 /*   By: aait-oma <aait-oma@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2022/03/25 13:42:33 by aait-oma          #+#    #+#             */
-/*   Updated: 2022/04/03 17:17:21 by aait-oma         ###   ########.fr       */
+/*   Updated: 2022/04/03 22:46:04 by aait-oma         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -30,11 +30,37 @@ long int    get_time(void)
     return (time);
 }
 
+int	isdead(t_philo *ph)
+{
+	static int	i;
+
+	if (ph->info.nbr_pilo_eat != 0)
+		if (ph->nbr_eat == ph->info.nbr_pilo_eat)
+			return (-1);
+	if (i == -1)
+		return (-1);
+	// pthread_mutex_lock(&ph->dead);
+	// if (spent_time(ph->time) - ph->last_meal > ph->time_to_die)
+	// {
+	// 	if (i == 0)
+	// 	{
+	// 		printf("%d %d died\n", spent_time(ph->time), ph->num);
+	// 		i = -1;
+	// 	}
+	// 	pthread_mutex_unlock(&ph->dead);
+	// 	pthread_mutex_unlock(ph->print);
+	// 	return (-1);
+	// }
+	// pthread_mutex_unlock(&ph->dead);
+	// pthread_mutex_unlock(ph->print);
+	// return (0);
+}
+
 void	info_init(t_info *inf, int ac, char **av)
 {
 	inf->nbr_philo = ft_atoi(av[1]);
 	inf->time_die = ft_atoi(av[2]);
-	inf->time_eat = ft_atoi(av[3]);
+	inf->time_to_eat = ft_atoi(av[3]);
 	inf->time_sleep = ft_atoi(av[4]);
 	if (ac == 5)
 		inf->nbr_pilo_eat = -1;
@@ -76,7 +102,7 @@ void	ft_takefork(t_philo *ph)
 void	ft_eating(t_philo *ph)
 {
 	printf("%ld	[%d]	is eating\n", get_time(), ph->id);
-	usleep(ph->info.time_eat * 1000);
+	usleep(ph->info.time_to_eat * 1000);
 	pthread_mutex_unlock(ph->right);
 	pthread_mutex_unlock(&ph->left);
 }
