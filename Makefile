@@ -14,8 +14,7 @@ clean:
 fclean:
 	rm -rf $(OBJ) $(NAME)
 
-re:
-	fclean all
+re: fclean all
 
 $(NAME): $(SRC) philo.h
 	$(CC) $(CFLAGS) -o $(NAME) $(SRC)

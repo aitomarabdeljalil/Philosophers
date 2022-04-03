@@ -6,7 +6,7 @@
 /*   By: aait-oma <aait-oma@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2022/03/25 13:42:33 by aait-oma          #+#    #+#             */
-/*   Updated: 2022/04/02 19:43:18 by aait-oma         ###   ########.fr       */
+/*   Updated: 2022/04/03 17:17:21 by aait-oma         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -19,6 +19,17 @@
 	av[4] = time_to_sleep
 	av[5] = number_of_times_each_philosopher_must_eat
 */
+long int    get_time(void)
+{
+    long int            time;
+    struct timeval        current_time;
+
+    time = 0;
+    gettimeofday(&current_time, NULL);
+    time = (current_time.tv_sec * 1000) + (current_time.tv_usec / 1000);
+    return (time);
+}
+
 void	info_init(t_info *inf, int ac, char **av)
 {
 	inf->nbr_philo = ft_atoi(av[1]);
@@ -57,20 +68,28 @@ void	philo_init(t_philo	**ph, t_info inf)
 void	ft_takefork(t_philo *ph)
 {
 	pthread_mutex_lock(ph->right);
-	printf("has taken a fork");
+	printf("%ld	[%d]	has taken a fork\n", get_time(), ph->id);
 	pthread_mutex_lock(&ph->left);
-	printf("has taken a fork");
+	printf("%ld	[%d]	has taken a fork\n", get_time(), ph->id);
 }
 
 void	ft_eating(t_philo *ph)
 {
-	printf("is eating");
-	usleep(ph->info.time_eat);
+	printf("%ld	[%d]	is eating\n", get_time(), ph->id);
+	usleep(ph->info.time_eat * 1000);
+	pthread_mutex_unlock(ph->right);
+	pthread_mutex_unlock(&ph->left);
 }
 
-void	ft_sleeping()
+void	ft_sleeping(t_philo *ph)
 {
-	
+	printf("%ld	[%d]	is sleeping\n", get_time(), ph->id);
+	usleep(ph->info.time_sleep * 1000);
+}
+
+void	ft_thinking(t_philo *ph)
+{
+	printf("%ld	[%d]	is thinking\n", get_time(), ph->id);
 }
 
 void	*plife(void *arg)
@@ -84,12 +103,12 @@ void	*plife(void *arg)
 	{
 		ft_takefork(ph);
 		ft_eating(ph);
-		ft_sleeping();
+		ft_sleeping(ph);
+		ft_thinking(ph);
 	}
-
 }
 
-int main(int ac, char **av)
+int	main(int ac, char **av)
 {
 	t_info	inf;
 	t_philo	*ph;
@@ -105,7 +124,12 @@ int main(int ac, char **av)
 	i = 0;
 	while (i < inf.nbr_philo)
 	{
-		pthread_create(&(ph[i].pt), NULL, &plife, NULL);
+		pthread_create(&(ph[i].pt), NULL, &plife, &ph[i]);
+		i++;
+	}
+	i = 0;
+	while (i < inf.nbr_philo)
+	{
 		pthread_join(ph[i].pt, NULL);
 		i++;
 	}
