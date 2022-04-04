@@ -6,7 +6,7 @@
 /*   By: aait-oma <aait-oma@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2022/03/25 20:11:52 by aait-oma          #+#    #+#             */
-/*   Updated: 2022/04/03 22:29:19 by aait-oma         ###   ########.fr       */
+/*   Updated: 2022/04/04 16:54:18 by aait-oma         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -17,6 +17,7 @@
 # include <sys/time.h>
 # include <stdio.h>
 # include <pthread.h>
+# include <stdbool.h>
 
 # define THINKING 1
 # define SLEEPING 2
@@ -24,11 +25,12 @@
 
 typedef struct s_info
 {
-	int	nbr_philo;
-	int	time_die;
-	int	time_to_eat;
-	int	time_sleep;
-	int	nbr_pilo_eat;
+	int		nbr_philo;
+	int		time_die;
+	int		time_to_eat;
+	int		time_sleep;
+	int		nbr_pilo_eat;
+	bool	philo_die;
 }	t_info;
 
 typedef struct s_philo
@@ -37,10 +39,12 @@ typedef struct s_philo
 	pthread_t		pt;
 	int				lp;
 	int				rp;
-	int				nbr_eat;
+	long int		last_meal;
+	int				nbr_meals;
+	long int		start;
 	pthread_mutex_t	left;
 	pthread_mutex_t	*right;
-	t_info			info;
+	t_info			*info;
 }	t_philo;
 
 int	ft_atoi(const char *str);

@@ -6,7 +6,7 @@
 /*   By: aait-oma <aait-oma@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2022/03/25 13:42:33 by aait-oma          #+#    #+#             */
-/*   Updated: 2022/04/03 22:46:04 by aait-oma         ###   ########.fr       */
+/*   Updated: 2022/04/04 17:47:12 by aait-oma         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -19,6 +19,7 @@
 	av[4] = time_to_sleep
 	av[5] = number_of_times_each_philosopher_must_eat
 */
+
 long int    get_time(void)
 {
     long int            time;
@@ -30,30 +31,27 @@ long int    get_time(void)
     return (time);
 }
 
+long int	spent_time(long int time)
+{
+	int current_time;
+
+	current_time = get_time() - time;
+	return (current_time);
+}
+
+
 int	isdead(t_philo *ph)
 {
-	static int	i;
-
-	if (ph->info.nbr_pilo_eat != 0)
-		if (ph->nbr_eat == ph->info.nbr_pilo_eat)
+	if (ph->info->nbr_pilo_eat != 0)
+		if (ph->nbr_meals == ph->info->nbr_pilo_eat)
 			return (-1);
-	if (i == -1)
+	if (get_time() - ph->last_meal > ph->info->time_die)
+	{
+		printf("%ld	[%d]	died\n", spent_time(ph->start), ph->id);
+		ph->info->philo_die = true;
 		return (-1);
-	// pthread_mutex_lock(&ph->dead);
-	// if (spent_time(ph->time) - ph->last_meal > ph->time_to_die)
-	// {
-	// 	if (i == 0)
-	// 	{
-	// 		printf("%d %d died\n", spent_time(ph->time), ph->num);
-	// 		i = -1;
-	// 	}
-	// 	pthread_mutex_unlock(&ph->dead);
-	// 	pthread_mutex_unlock(ph->print);
-	// 	return (-1);
-	// }
-	// pthread_mutex_unlock(&ph->dead);
-	// pthread_mutex_unlock(ph->print);
-	// return (0);
+	}
+	return (0);
 }
 
 void	info_init(t_info *inf, int ac, char **av)
@@ -63,9 +61,10 @@ void	info_init(t_info *inf, int ac, char **av)
 	inf->time_to_eat = ft_atoi(av[3]);
 	inf->time_sleep = ft_atoi(av[4]);
 	if (ac == 5)
-		inf->nbr_pilo_eat = -1;
+		inf->nbr_pilo_eat = 0;
 	else
 		inf->nbr_pilo_eat = ft_atoi(av[5]);
+	inf->philo_die = false;
 }
 
 void	philo_init(t_philo	**ph, t_info inf)
@@ -85,7 +84,10 @@ void	philo_init(t_philo	**ph, t_info inf)
 		else
 			(*ph)[i].rp = i + 2;
 		(*ph)[i].right = &(*ph)[(*ph)[i].rp - 1].left;
-		(*ph)[i].info = inf;
+		(*ph)[i].info = &inf;
+		(*ph)[i].nbr_meals = 0;
+		(*ph)[i].last_meal = get_time();
+		(*ph)[i].start = get_time();
 		pthread_mutex_init(&(*ph)[i].left, NULL);
 		i++;
 	}
@@ -94,28 +96,33 @@ void	philo_init(t_philo	**ph, t_info inf)
 void	ft_takefork(t_philo *ph)
 {
 	pthread_mutex_lock(ph->right);
-	printf("%ld	[%d]	has taken a fork\n", get_time(), ph->id);
+	printf("%ld	[%d]	has taken a fork\n", spent_time(ph->start), ph->id);
 	pthread_mutex_lock(&ph->left);
-	printf("%ld	[%d]	has taken a fork\n", get_time(), ph->id);
+	printf("%ld	[%d]	has taken a fork\n", spent_time(ph->start), ph->id);
 }
 
 void	ft_eating(t_philo *ph)
 {
-	printf("%ld	[%d]	is eating\n", get_time(), ph->id);
-	usleep(ph->info.time_to_eat * 1000);
+	long int	lmeal;
+
+	lmeal = spent_time(ph->start);
+	printf("%ld	[%d]	is eating\n", lmeal, ph->id);
+	ph->last_meal = lmeal;
+	usleep(ph->info->time_to_eat * 1000);
+	ph->nbr_meals++;
 	pthread_mutex_unlock(ph->right);
 	pthread_mutex_unlock(&ph->left);
 }
 
 void	ft_sleeping(t_philo *ph)
 {
-	printf("%ld	[%d]	is sleeping\n", get_time(), ph->id);
-	usleep(ph->info.time_sleep * 1000);
+	printf("%ld	[%d]	is sleeping\n", spent_time(ph->start), ph->id);
+	usleep(ph->info->time_sleep * 1000);
 }
 
 void	ft_thinking(t_philo *ph)
 {
-	printf("%ld	[%d]	is thinking\n", get_time(), ph->id);
+	printf("%ld	[%d]	is thinking\n", spent_time(ph->start), ph->id);
 }
 
 void	*plife(void *arg)
@@ -124,14 +131,15 @@ void	*plife(void *arg)
 
 	ph = (t_philo *)arg;
 	if (ph->id % 2 == 0)
-		usleep(ph->info.time_die / 2);
-	while (1)
+		usleep(ph->info->time_die / 2);
+	while (!isdead(ph) && ph->info->philo_die == false)
 	{
 		ft_takefork(ph);
 		ft_eating(ph);
 		ft_sleeping(ph);
 		ft_thinking(ph);
 	}
+	return (NULL);
 }
 
 int	main(int ac, char **av)
