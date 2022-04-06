@@ -1,6 +1,6 @@
 NAME	:= philosophers
 CC		:= gcc
-CFLAGES	:= -Wall -Wextra -Werror -pthread
+CFLAGS	:= -Wall -Wextra -Werror -pthread
 SRC		:= main.c ft_atoi.c ft_isdigit.c
 OBJ		:= $(patsubst %.c, %.o, $(SRC))
 

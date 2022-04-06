@@ -6,7 +6,7 @@
 /*   By: aait-oma <aait-oma@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2022/03/25 20:11:52 by aait-oma          #+#    #+#             */
-/*   Updated: 2022/04/04 16:54:18 by aait-oma         ###   ########.fr       */
+/*   Updated: 2022/04/05 01:51:01 by aait-oma         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -42,6 +42,7 @@ typedef struct s_philo
 	long int		last_meal;
 	int				nbr_meals;
 	long int		start;
+	pthread_mutex_t	dead;
 	pthread_mutex_t	left;
 	pthread_mutex_t	*right;
 	t_info			*info;
