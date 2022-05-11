@@ -5,8 +5,8 @@
 /*                                                    +:+ +:+         +:+     */
 /*   By: aait-oma <aait-oma@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
-/*   Created: 2022/03/25 20:11:52 by aait-oma          #+#    #+#             */
-/*   Updated: 2022/04/06 16:23:33 by aait-oma         ###   ########.fr       */
+/*   Created: 2022/05/09 13:47:59 by aait-oma          #+#    #+#             */
+/*   Updated: 2022/05/11 11:20:35 by aait-oma         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -18,10 +18,6 @@
 # include <stdio.h>
 # include <pthread.h>
 # include <stdbool.h>
-
-# define THINKING 1
-# define SLEEPING 2
-# define EATING 3
 
 typedef struct s_info
 {
@@ -49,7 +45,10 @@ typedef struct s_philo
 	t_info			*info;
 }	t_philo;
 
-int	ft_atoi(const char *str);
-int	ft_isdigit(int c);
+int		ft_atoi(const char *str);
+int		ft_isdigit(int c);
+void	*plife(void *arg);
+void	info_init(t_info *inf, int ac, char **av);
+void	philo_init(t_philo	**ph, t_info inf);
 
 #endif

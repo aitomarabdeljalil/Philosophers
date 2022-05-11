@@ -6,7 +6,7 @@
 /*   By: aait-oma <aait-oma@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2022/03/25 13:42:33 by aait-oma          #+#    #+#             */
-/*   Updated: 2022/04/06 01:11:10 by aait-oma         ###   ########.fr       */
+/*   Updated: 2022/05/11 12:11:07 by aait-oma         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -55,20 +55,21 @@ int	isdead(t_philo *ph)
 {
 	static int	i;
 
+	if (i == -1)
+		return (-1);
 	if (ph->info->nbr_pilo_eat != 0)
 		if (ph->nbr_meals == ph->info->nbr_pilo_eat)
 			return (1);
-	if (i == -1)
-		return (-1);
 	pthread_mutex_lock(&ph->dead);
-	if (get_time() - ph->last_meal > ph->info->time_die)
+	if (spent_time(ph->start) - ph->last_meal > ph->info->time_die)
 	{
+		pthread_mutex_lock(ph->write_mutex);
 		if (i == 0)
 		{
-			printf("%ld	[%d]	died\n", spent_time(ph->start), ph->id);
 			i = -1;
+			printf("%ld	[%d]	died\n", spent_time(ph->start), ph->id);
 		}
-		ph->info->philo_die = true;
+		// pthread_mutex_unlock(ph->write_mutex);
 		pthread_mutex_unlock(&ph->dead);
 		return (-1);
 	}
@@ -89,7 +90,7 @@ void	info_init(t_info *inf, int ac, char **av)
 	inf->philo_die = false;
 }
 
-void	philo_init(t_philo	**ph, t_info inf)
+void	philo_init(t_philo	**ph, t_info inf, pthread_mutex_t *write_mutex)
 {
 	int	i;
 
@@ -110,27 +111,37 @@ void	philo_init(t_philo	**ph, t_info inf)
 		(*ph)[i].nbr_meals = 0;
 		(*ph)[i].last_meal = get_time();
 		(*ph)[i].start = get_time();
+		(*ph)[i].write_mutex = write_mutex;
 		pthread_mutex_init(&(*ph)[i].left, NULL);
+		pthread_mutex_init((*ph)[i].write_mutex, NULL);
 		i++;
 	}
 }
 
 void	ft_takefork(t_philo *ph)
 {
-	pthread_mutex_lock(&ph->left);
-	printf("%ld	[%d]	has taken a l fork\n", spent_time(ph->start), ph->id);
+	if (isdead(ph) == -1)
+		return ;
 	pthread_mutex_lock(ph->right);
+	pthread_mutex_lock(&ph->left);
+	//pthread_mutex_lock(ph->write_mutex);
+	printf("%ld	[%d]	has taken a l fork\n", spent_time(ph->start), ph->id);
 	printf("%ld	[%d]	has taken a r fork\n", spent_time(ph->start), ph->id);
+	//pthread_mutex_unlock(ph->write_mutex);
 }
 
 void	ft_eating(t_philo *ph)
 {
 	long int	lmeal;
 
+	if (isdead(ph) == -1)
+		return ;
 	lmeal = spent_time(ph->start);
+	pthread_mutex_lock(ph->write_mutex);
 	printf("%ld	[%d]	is eating\n", lmeal, ph->id);
+	pthread_mutex_unlock(ph->write_mutex);
 	ph->last_meal = lmeal;
-	ft_delay(ph->info->time_to_eat * 1000);
+	ft_delay(ph->info->time_to_eat);
 	ph->nbr_meals++;
 	pthread_mutex_unlock(ph->right);
 	pthread_mutex_unlock(&ph->left);
@@ -138,13 +149,23 @@ void	ft_eating(t_philo *ph)
 
 void	ft_sleeping(t_philo *ph)
 {
+	if (isdead(ph) == -1)
+		return ;
+	pthread_mutex_lock(ph->write_mutex);
 	printf("%ld	[%d]	is sleeping\n", spent_time(ph->start), ph->id);
-	ft_delay(ph->info->time_sleep * 1000);
+	pthread_mutex_unlock(ph->write_mutex);
+	ft_delay(ph->info->time_sleep);
 }
 
-void	ft_thinking(t_philo *ph)
+bool	ft_thinking(t_philo *ph)
 {
+	if (isdead(ph) == -1)
+		return ;
+	pthread_mutex_lock(ph->write_mutex);
+	if (!pprintf(fsdfsd))
+		return (false);
 	printf("%ld	[%d]	is thinking\n", spent_time(ph->start), ph->id);
+	pthread_mutex_unlock(ph->write_mutex);
 }
 
 void	*plife(void *arg)
@@ -153,21 +174,50 @@ void	*plife(void *arg)
 
 	ph = (t_philo *)arg;
 	if (ph->id % 2 == 0)
-		ft_delay(ph->info->time_die / 2);
-	while (1)
+		usleep(ph->info->time_die / 2);
+	while (!isdead(ph))
 	{
 		ft_takefork(ph);
 		ft_eating(ph);
 		ft_sleeping(ph);
-		ft_thinking(ph);
+		if (!ft_thinking(ph))
+			return (NULL)
 	}
 	return (NULL);
 }
+
+void	main_check(t_philo *th)
+{
+	int	i;
+
+	i = 0;
+	while (1)
+	{
+		i = 0;
+		while (i < th[1].info->nbr_philo)
+		{
+			isdead(&th[i]);
+			i++;
+		}
+		if (i == 0)
+		{
+			if (isdead(&th[i]) == -1)
+				break ;
+		}
+		else
+			if (isdead(&th[i - 1]) == -1)
+				break ;
+		usleep(1000);
+	}
+	return ;
+}
+
 
 int	main(int ac, char **av)
 {
 	t_info	inf;
 	t_philo	*ph;
+	pthread_mutex_t write_mutex;
 	int		i;
 
 	if ((ac < 5 || ac > 6) && printf("error\n"))
@@ -176,42 +226,13 @@ int	main(int ac, char **av)
 	ph = malloc(inf.nbr_philo * sizeof(t_philo));
 	if (!ph)
 		return (0);
-	philo_init(&ph, inf);
+	philo_init(&ph, inf, &write_mutex);
 	i = 0;
 	while (i < inf.nbr_philo)
 	{
 		pthread_create(&(ph[i].pt), NULL, &plife, &ph[i]);
 		i++;
 	}
-	while (1)
-	{
-		static int	j;
-
-		if (ph->info->nbr_pilo_eat != 0)
-			if (ph->nbr_meals == ph->info->nbr_pilo_eat)
-				return (1);
-		if (j == -1)
-			return (-1);
-		pthread_mutex_lock(&ph->dead);
-		if (get_time() - ph->last_meal > ph->info->time_die)
-		{
-			if (j == 0)
-			{
-				printf("%ld	[%d]	died\n", spent_time(ph->start), ph->id);
-				j = -1;
-			}
-			ph->info->philo_die = true;
-			pthread_mutex_unlock(&ph->dead);
-			return (-1);
-		}
-		pthread_mutex_unlock(&ph->dead);
-		//return (0);
-	}
-	i = 0;
-	while (i < inf.nbr_philo)
-	{
-		pthread_join(ph[i].pt, NULL);
-		i++;
-	}
+	main_check(ph);
 	return (0);
 }
