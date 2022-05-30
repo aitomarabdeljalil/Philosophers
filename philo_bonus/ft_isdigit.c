@@ -1,38 +1,18 @@
 /* ************************************************************************** */
 /*                                                                            */
 /*                                                        :::      ::::::::   */
-/*   ft_atoi.c                                          :+:      :+:    :+:   */
+/*   ft_isdigit.c                                       :+:      :+:    :+:   */
 /*                                                    +:+ +:+         +:+     */
 /*   By: aait-oma <aait-oma@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
-/*   Created: 2021/11/07 12:42:11 by aait-oma          #+#    #+#             */
-/*   Updated: 2022/03/28 12:03:22 by aait-oma         ###   ########.fr       */
+/*   Created: 2021/11/03 14:09:36 by syakoubi          #+#    #+#             */
+/*   Updated: 2022/05/17 16:55:50 by aait-oma         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
-#include "philo.h"
+#include "philo_bonus.h"
 
-static int	ft_isspace(int c)
+int	ft_isdigit(int c)
 {
-	return ((c >= 9 && c <= 13) || c == 32);
-}
-
-int	ft_atoi(const char *str)
-{
-	int	result;
-	int	sign;
-
-	result = 0;
-	sign = 1;
-	while (ft_isspace(*str))
-		str++;
-	if (*str == '-' || *str == '+')
-	{
-		if (*str == '-')
-			sign = -1;
-		str++;
-	}
-	while (ft_isdigit(*str))
-		result = result * 10 + (*(str++) - 48) * sign;
-	return (result);
+	return (c >= 48 && c <= 57);
 }

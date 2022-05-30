@@ -1,7 +1,7 @@
-NAME	:= philosophers
+NAME	:= philo_bonus
 CC		:= gcc
 CFLAGS	:= -Wall -Wextra -Werror -pthread
-SRC		:= main.c ft_atoi.c ft_isdigit.c
+SRC		:= ft_atoi.c ft_isdigit.c info.c main.c philosopher.c tools.c
 OBJ		:= $(patsubst %.c, %.o, $(SRC))
 
 .PHONY: all clean fclean re
@@ -16,5 +16,5 @@ fclean:
 
 re: fclean all
 
-$(NAME): $(SRC) philo.h
+$(NAME): $(SRC) philo_bonus.h
 	$(CC) $(CFLAGS) -o $(NAME) $(SRC)

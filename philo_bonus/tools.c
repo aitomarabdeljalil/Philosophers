@@ -1,16 +1,16 @@
 /* ************************************************************************** */
 /*                                                                            */
 /*                                                        :::      ::::::::   */
-/*   time_func.c                                        :+:      :+:    :+:   */
+/*   tools.c                                            :+:      :+:    :+:   */
 /*                                                    +:+ +:+         +:+     */
 /*   By: aait-oma <aait-oma@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2022/05/10 14:10:27 by aait-oma          #+#    #+#             */
-/*   Updated: 2022/05/30 17:25:34 by aait-oma         ###   ########.fr       */
+/*   Updated: 2022/05/30 13:19:02 by aait-oma         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
-#include "philo.h"
+#include "philo_bonus.h"
 
 long int	get_time(void)
 {
@@ -38,4 +38,27 @@ long int	spent_time(long int time)
 
 	current_time = get_time() - time;
 	return (current_time);
+}
+
+int	cleanup_err(t_info *inf, t_philo *ph, pid_t *pids)
+{
+	if (pids)
+		free(pids);
+	if (ph)
+		philo_free(ph, inf->nbr_philo);
+	if (inf)
+		info_destroy(inf);
+	write(2, "Error\n", 6);
+	return (1);
+}
+
+int	cleanup(t_info *inf, t_philo *ph, pid_t *pids)
+{
+	if (pids)
+		free(pids);
+	if (ph)
+		philo_free(ph, inf->nbr_philo);
+	if (inf)
+		info_destroy(inf);
+	return (1);
 }
