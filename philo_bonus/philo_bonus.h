@@ -6,7 +6,7 @@
 /*   By: aait-oma <aait-oma@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2022/05/14 20:58:02 by aait-oma          #+#    #+#             */
-/*   Updated: 2022/05/27 20:04:09 by aait-oma         ###   ########.fr       */
+/*   Updated: 2022/06/01 14:42:05 by aait-oma         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -54,7 +54,6 @@ void		info_destroy(t_info *inf);
 void		killpids(pid_t *pids, int sig, int n);
 pid_t		*philo_pids(t_philo *ph, int n);
 bool		wait_for_philos(pid_t *pids, t_info *inf);
-// void		info_destroy(t_info *info);
 int			cleanup_err(t_info *inf, t_philo *ph, pid_t *pids);
 int			cleanup(t_info *inf, t_philo *ph, pid_t *pids);
 void		plife(t_philo	*ph);

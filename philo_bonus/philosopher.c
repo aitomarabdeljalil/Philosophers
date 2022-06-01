@@ -6,7 +6,7 @@
 /*   By: aait-oma <aait-oma@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2022/05/24 14:34:44 by aait-oma          #+#    #+#             */
-/*   Updated: 2022/05/27 20:15:52 by aait-oma         ###   ########.fr       */
+/*   Updated: 2022/06/01 14:43:16 by aait-oma         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -14,18 +14,17 @@
 
 void	plife(t_philo *ph)
 {
-	t_info	*inf;
+	const t_info	*inf = ph->info;
 
-	inf = ph->info;
 	while (ph->nbr_meals == -2 || ph->nbr_meals--)
 	{
 		sem_wait(inf->forks);
-		info_stop_probe(inf);
+		info_stop_probe((t_info *)inf);
 		printf("%ld	[%d]	has taken a fork\n", spent_time(ph->start), ph->id);
 		sem_wait(inf->forks);
-		info_stop_probe(inf);
+		info_stop_probe((t_info *)inf);
 		printf("%ld	[%d]	has taken a fork\n", spent_time(ph->start), ph->id);
-		info_stop_probe(inf);
+		info_stop_probe((t_info *)inf);
 		printf("%ld	[%d]	is eating\n", spent_time(ph->start), ph->id);
 		sem_wait(ph->s_last_meal);
 		ph->last_meal = get_time();
@@ -33,10 +32,10 @@ void	plife(t_philo *ph)
 		ft_delay(inf->t_toeat);
 		sem_post(inf->forks);
 		sem_post(inf->forks);
-		info_stop_probe(inf);
+		info_stop_probe((t_info *)inf);
 		printf("%ld	[%d]	is sleeping\n", spent_time(ph->start), ph->id);
 		ft_delay(inf->t_sleep);
-		info_stop_probe(inf);
+		info_stop_probe((t_info *)inf);
 		printf("%ld	[%d]	is thinking\n", spent_time(ph->start), ph->id);
 	}
 	exit(0);
@@ -79,19 +78,6 @@ pid_t	philo_launch(t_philo *ph)
 		usleep(1000);
 	plife(ph);
 	return (pid);
-}
-
-void	philo_destroy(t_philo *ph)
-{
-	sem_close (ph->s_last_meal);
-	sem_unlink("s_last_meal");
-}
-
-void	philo_free(t_philo *ph, int n)
-{
-	while (n--)
-		philo_destroy(ph + n);
-	free(ph);
 }
 
 bool	philo_init(t_philo *ph, t_info *inf, int i)

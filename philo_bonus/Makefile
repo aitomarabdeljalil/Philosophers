@@ -1,7 +1,7 @@
 NAME	:= philo_bonus
 CC		:= gcc
 CFLAGS	:= -Wall -Wextra -Werror -pthread
-SRC		:= ft_atoi.c ft_isdigit.c info.c main.c philosopher.c tools.c
+SRC		:= ft_atoi.c ft_isdigit.c info.c main.c philosopher.c philo_utils.c tools.c
 OBJ		:= $(patsubst %.c, %.o, $(SRC))
 
 .PHONY: all clean fclean re
