@@ -1,6 +1,6 @@
 NAME	:= philo
 CC		:= gcc
-CFLAGS	:= -I . -Wall -Wextra -Werror -pthread -g
+CFLAGS	:= -I . -Wall -Wextra -Werror -pthread
 SRC		:= ft_atoi.c ft_isdigit.c initialize.c isdead.c main.c philo_life.c time_func.c activity.c
 
 OBJ		:= $(patsubst %.c, %.o, $(SRC))

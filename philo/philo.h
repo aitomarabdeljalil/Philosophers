@@ -6,7 +6,7 @@
 /*   By: aait-oma <aait-oma@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2022/05/09 13:47:59 by aait-oma          #+#    #+#             */
-/*   Updated: 2022/05/30 18:34:34 by aait-oma         ###   ########.fr       */
+/*   Updated: 2022/06/02 17:13:28 by aait-oma         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -49,7 +49,7 @@ typedef struct s_philo
 int			ft_atoi(const char *str);
 int			ft_isdigit(int c);
 void		*plife(void *arg);
-void		info_init(t_info *inf, int ac, char **av);
+bool		info_init(t_info *inf, int ac, char **av);
 void		philo_init(t_philo	**ph, t_info inf);
 void		ft_takefork(t_philo *ph);
 void		ft_eating(t_philo *ph);

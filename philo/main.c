@@ -6,7 +6,7 @@
 /*   By: aait-oma <aait-oma@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2022/05/09 12:23:12 by aait-oma          #+#    #+#             */
-/*   Updated: 2022/05/14 20:21:46 by aait-oma         ###   ########.fr       */
+/*   Updated: 2022/06/02 17:12:19 by aait-oma         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -20,7 +20,8 @@ int	main(int ac, char **av)
 
 	if ((ac < 5 || ac > 6) && printf("error\n"))
 		return (0);
-	info_init(&inf, ac, av);
+	if (!info_init(&inf, ac, av))
+		return (0);
 	ph = malloc(inf.nbr_philo * sizeof(t_philo));
 	if (!ph)
 		return (0);

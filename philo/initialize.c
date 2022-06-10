@@ -6,7 +6,7 @@
 /*   By: aait-oma <aait-oma@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2022/05/09 17:26:26 by aait-oma          #+#    #+#             */
-/*   Updated: 2022/05/30 18:58:52 by aait-oma         ###   ########.fr       */
+/*   Updated: 2022/06/03 10:43:47 by aait-oma         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -18,6 +18,8 @@ int	conv_arg(char *str)
 	int	i;
 	int	nbr;
 
+	if (!str)
+		return (-2);
 	i = 0;
 	if (*str == '\0')
 		return (-1);
@@ -27,12 +29,12 @@ int	conv_arg(char *str)
 		return (-1);
 	errno = 0;
 	nbr = ft_atoi(str);
-	if (errno == 1)
+	if (errno == 1 || nbr < 1)
 		return (-1);
 	return (nbr);
 }
 
-void	info_init(t_info *inf, int ac, char **av)
+bool	info_init(t_info *inf, int ac, char **av)
 {
 	inf->nbr_philo = conv_arg(av[1]);
 	inf->time_die = conv_arg(av[2]);
@@ -48,8 +50,9 @@ void	info_init(t_info *inf, int ac, char **av)
 		|| inf->nbr_pilo_eat == -1)
 	{
 		printf("args error!!\n");
-		return ;
+		return (false);
 	}
+	return (true);
 }
 
 void	philo_init(t_philo	**ph, t_info inf)
